@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 NAME="$1"
-PANES="$2"
+DIR="$2"
+PANES="$3"
+SESSION="$(tmux display-message -p '#S')"
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEFAULT_CONFIG="$CURRENT_DIR/defaults.yml"
 USER_CONFIG="$HOME/.config/tmux/tmux-nerd-font-window-name.yml"
@@ -41,6 +43,15 @@ if [ "$SHOW_NAME" = true ]; then
 		ICON="$NAME $ICON"
 	else
 		ICON="$ICON $NAME"
+	fi
+fi
+
+if [ "$SESSION" != "$DIR" ]; then
+	DIR_ICON="$(get_config_value '.config.cwd-icon')"
+	if [ "$DIR_ICON" != "null" ]; then
+		ICON="$ICON ($DIR_ICON $DIR)"
+	else
+		ICON="$ICON ($DIR)"
 	fi
 fi
 
